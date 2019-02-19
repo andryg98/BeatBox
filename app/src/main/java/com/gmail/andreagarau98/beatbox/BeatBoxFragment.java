@@ -15,7 +15,11 @@ import android.view.ViewGroup;
 import com.gmail.andreagarau98.beatbox.databinding.FragmentBeatBoxBinding;
 import com.gmail.andreagarau98.beatbox.databinding.ListItemSoundBinding;
 
+import java.util.List;
+
 public class BeatBoxFragment extends Fragment {
+
+    private BeatBox mBeatBox;
 
     public static BeatBoxFragment newInstance() {
         return new BeatBoxFragment();
@@ -26,11 +30,16 @@ public class BeatBoxFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentBeatBoxBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_beat_box, container, false);
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
-        binding.recyclerView.setAdapter(new SoundAdapter());
+        binding.recyclerView.setAdapter(new SoundAdapter(mBeatBox.getSounds()));
         return binding.getRoot();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        mBeatBox = new BeatBox(getActivity());
+    }
 
     private class SoundHolder extends RecyclerView.ViewHolder {
         private ListItemSoundBinding mBinding;
@@ -42,6 +51,12 @@ public class BeatBoxFragment extends Fragment {
     }
 
     private class SoundAdapter extends RecyclerView.Adapter<SoundHolder> {
+        private List<Sound> mSounds;
+
+        public SoundAdapter(List<Sound> sounds) {
+            mSounds = sounds;
+        }
+
         @NonNull
         @Override
         public SoundHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -57,7 +72,7 @@ public class BeatBoxFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mSounds.size();
         }
     }
 }
